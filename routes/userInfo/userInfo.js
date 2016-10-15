@@ -20,4 +20,5 @@ userInfo.post('/log', function(req, res) {
 		}
 	})
 })
+userInfo.post('')
 module.exports = userInfo

@@ -5,7 +5,19 @@ userInfoDao.getUserInfo = function(wid, cb) {
 	pool.getConnection(function(err, connection) {
 		if (err)
 			cb(err);
-		connection.query(getUserFriendsSql, [wid], function(err, result) {
+		connection.query(getUserInfo, [wid], function(err, result) {
+			// return object back to pool
+			connection.release();
+			cb(err, result);
+		});
+	});
+}
+userInfoDao.getUserInfoByWid = function(wid, cb) {
+	var getUserInfo = "select * from userInfo where wid = ?"
+	pool.getConnection(function(err, connection) {
+		if (err)
+			cb(err);
+		connection.query(getUserInfo, [wid], function(err, result) {
 			// return object back to pool
 			connection.release();
 			cb(err, result);
@@ -13,11 +25,12 @@ userInfoDao.getUserInfo = function(wid, cb) {
 	});
 }
 userInfoDao.insertUserInfo = function(wid, tel,cb) {
-	var insertUserInfo = "insert into userInfo(wid,tel) values(?,?)"
+	var time = new Date().getTime();
+	var insertUserInfo = "insert into userInfo(wid,tel,time) values(?,?)"
 	pool.getConnection(function(err, connection) {
 		if (err)
 			cb(err);
-		connection.query(insertUserFriendsSql, [wid,tel], function(err, result) {
+		connection.query(insertUserInfo, [wid,tel,time], function(err, result) {
 			// return object back to pool
 			connection.release();
 			cb(err, result);
