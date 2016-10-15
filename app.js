@@ -4,11 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var seesion = require('express-session');
+var session = require('express-session');
 var  seedrandom = require("seedrandom");
 var redisStore = require('connect-redis')(session);
 //var routes = require('./routes/index');
 //var users = require('./routes/users');
+var admin = require('./routes/admin/admin');
 var sessionAuth = require('./routes/sessionAuth/sessionAuth')
 var userInfo = require('./routes/userInfo/userInfo')
 var app = express();
@@ -16,6 +17,11 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+var options = {
+  "host": "127.0.0.1",
+  "port": "6379",
+  "ttl": 60 * 60 * 24
+};
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -70,7 +76,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-utils.randomWord = function(lowercaseFlag,randomFlag, min, max){
+function randomWord(lowercaseFlag,randomFlag, min, max){
     var str = "",
         range = min,
         arr = "";
